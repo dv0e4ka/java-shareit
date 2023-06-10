@@ -9,7 +9,6 @@ import ru.practicum.shareit.error.model.EmailDuplicatedFound;
 import ru.practicum.shareit.error.model.EntityNotFoundException;
 import ru.practicum.shareit.error.model.ErrorResponse;
 
-import java.security.InvalidParameterException;
 
 @RestControllerAdvice
 @Slf4j
@@ -28,13 +27,4 @@ public class ErrorHandler {
         log.error("получен статус 409 Conflict, duplicated email={}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }
-
-//    @ExceptionHandler
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    public ErrorResponse handleIncorrectParameterException(InvalidParameterException e) {
-//        log.debug("Получен статус 400 Bad request {}", e.getMessage(), e);
-//        return new ErrorResponse(
-//                String.format("Ошибка с полем \"%s\".", e.getMessage())
-//        );
-//    }
 }

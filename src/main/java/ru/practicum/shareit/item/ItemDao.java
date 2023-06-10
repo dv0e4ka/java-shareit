@@ -4,7 +4,6 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.List;
 
 public interface ItemDao {
-//    Item add(Item item, Long owner);
     Item add(Item item);
 
     Item patch(Item item);
@@ -18,6 +17,4 @@ public interface ItemDao {
     boolean isContains(long id);
 
     List<Item> findByParam(String text);
-
-    List<Item> getAllAddedItems();
 }

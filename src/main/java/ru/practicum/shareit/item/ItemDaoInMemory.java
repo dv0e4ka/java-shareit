@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 import ru.practicum.shareit.item.model.Item;
 
 
@@ -84,10 +83,5 @@ public class ItemDaoInMemory implements ItemDao {
             }
         }
         return items;
-    }
-
-    @Override
-    public List<Item> getAllAddedItems() {
-        return new ArrayList<>(itemMap.values());
     }
 }

@@ -8,6 +8,5 @@ import lombok.Data;
 
 @Data
 public class ItemRequestDto {
-//    private long id;
     private String name;
 }

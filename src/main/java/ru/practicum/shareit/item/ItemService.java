@@ -6,7 +6,6 @@ import ru.practicum.shareit.error.model.EntityNotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.UserDao;
 import ru.practicum.shareit.user.UserService;
 
 import java.util.List;
@@ -68,9 +67,5 @@ public class ItemService {
     public List<ItemDto> findByParam(String text) {
         List<Item> items = itemDao.findByParam(text);
         return items.stream().map(itemMapper::toDto).collect(Collectors.toList());
-    }
-
-    public List<ItemDto> getAllAddedItems() {
-        return itemDao.getAllAddedItems().stream().map(itemMapper::toDto).collect(Collectors.toList());
     }
 }

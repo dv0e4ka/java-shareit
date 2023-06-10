@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -54,10 +53,5 @@ public class ItemController {
     public List<ItemDto> findByParam(@RequestParam String text) {
         log.info("поступил запрос на поиск доступной вещи по параметру={}", text);
         return itemService.findByParam(text);
-    }
-
-    @GetMapping("/all")
-    public List<ItemDto> getAllAddedItems() {
-        return itemService.getAllAddedItems();
     }
 }
