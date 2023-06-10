@@ -18,4 +18,6 @@ public interface ItemDao {
     boolean isContains(long id);
 
     List<Item> findByParam(String text);
+
+    List<Item> getAllAddedItems();
 }

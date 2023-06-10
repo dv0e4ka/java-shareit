@@ -1,7 +1,9 @@
 package ru.practicum.shareit.item;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 import ru.practicum.shareit.item.model.Item;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,13 +71,23 @@ public class ItemDaoInMemory implements ItemDao {
 
     @Override
     public List<Item> findByParam(String text) {
-        // TODO:
+        if (text == null || text.isEmpty() || text.isBlank()) {
+            return new ArrayList<>();
+        }
         List<Item> items = new ArrayList<>();
         for (Item item : itemMap.values()) {
-            if (item.getName().contains(text) || item.getDescription().contains(text)) {
-                items.add(item);
+            if (item.getAvailable()) {
+                if (item.getName().toLowerCase().contains(text.toLowerCase())
+                    || item.getDescription().toLowerCase().contains(text.toLowerCase())) {
+                    items.add(item);
+                }
             }
         }
         return items;
+    }
+
+    @Override
+    public List<Item> getAllAddedItems() {
+        return new ArrayList<>(itemMap.values());
     }
 }

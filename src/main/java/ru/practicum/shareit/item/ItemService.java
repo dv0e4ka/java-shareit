@@ -69,4 +69,8 @@ public class ItemService {
         List<Item> items = itemDao.findByParam(text);
         return items.stream().map(itemMapper::toDto).collect(Collectors.toList());
     }
+
+    public List<ItemDto> getAllAddedItems() {
+        return itemDao.getAllAddedItems().stream().map(itemMapper::toDto).collect(Collectors.toList());
+    }
 }

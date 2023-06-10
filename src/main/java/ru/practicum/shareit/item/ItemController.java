@@ -55,4 +55,9 @@ public class ItemController {
         log.info("поступил запрос на поиск доступной вещи по параметру={}", text);
         return itemService.findByParam(text);
     }
+
+    @GetMapping("/all")
+    public List<ItemDto> getAllAddedItems() {
+        return itemService.getAllAddedItems();
+    }
 }
