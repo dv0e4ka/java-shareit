@@ -12,7 +12,7 @@ public class UserMapper {
                 .build();
     }
 
-    public User fromDto (UserDto userDto) {
+    public User fromDto(UserDto userDto) {
         return User.builder()
                 .id(userDto.getId())
                 .name(userDto.getName())
