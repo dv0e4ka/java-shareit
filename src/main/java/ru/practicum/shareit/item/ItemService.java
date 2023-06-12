@@ -61,7 +61,7 @@ public class ItemService {
         }
         List<Item> items = itemDao.getAll(id);
         if (items == null) return null;
-        return itemDao.getAll(id).stream().map(itemMapper::toDto).collect(Collectors.toList());
+        return items.stream().map(itemMapper::toDto).collect(Collectors.toList());
     }
 
     public List<ItemDto> findByParam(String text) {
