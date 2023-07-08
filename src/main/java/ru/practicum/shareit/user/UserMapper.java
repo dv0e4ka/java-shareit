@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.model;
+package ru.practicum.shareit.user;
 
 import org.springframework.stereotype.Component;
 

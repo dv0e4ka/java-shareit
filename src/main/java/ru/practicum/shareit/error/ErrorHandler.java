@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.error.model.EmailDuplicatedFound;
 import ru.practicum.shareit.error.model.EntityNotFoundException;
 import ru.practicum.shareit.error.model.ErrorResponse;
+import ru.practicum.shareit.error.model.ValidationException;
 
 
 @RestControllerAdvice
@@ -39,6 +40,13 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handle(MethodArgumentNotValidException e) {
+        log.error("Получен статус 400 Bad request {}", e.getMessage(), e);
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handle(ValidationException e) {
         log.error("Получен статус 400 Bad request {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }

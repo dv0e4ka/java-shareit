@@ -3,7 +3,6 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.ItemDto;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -31,16 +30,18 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ItemDto get(@PathVariable long id) {
+    public ItemDto findById(@PathVariable long id) {
         log.info("поступил запрос на поиск вещи id={}", id);
-        return itemService.get(id);
+        return itemService.findById(id);
     }
 
     @GetMapping
     public List<ItemDto> getItemsAll(@RequestHeader("X-Sharer-User-Id") long ownerId) {
         log.info("поступил запрос на поиск своих вещей от владельца id={}", ownerId);
-        return itemService.getAll(ownerId);
+        return itemService.findAllByUserId(ownerId);
     }
+
+
 
     @GetMapping("/search")
     public List<ItemDto> findByParam(@RequestParam String text) {
