@@ -1,7 +1,9 @@
-package ru.practicum.shareit;
+package ru.practicum.shareit.booking;
 
 import lombok.Builder;
 import lombok.Data;
+import ru.practicum.shareit.item.ItemDto;
+import ru.practicum.shareit.user.UserDto;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.FutureOrPresent;
@@ -12,7 +14,9 @@ import java.time.LocalDateTime;
 @Builder
 public class BookingDto {
     private long id;
-
+    private BookingStatus status;
+    private ItemDto itemDto;
+    private UserDto userDto;
     @NotNull
     @FutureOrPresent
     private LocalDateTime start;
@@ -23,6 +27,4 @@ public class BookingDto {
 
     @NotNull
     private long itemId;
-
-
 }

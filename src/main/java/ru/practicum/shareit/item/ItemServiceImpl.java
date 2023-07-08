@@ -23,7 +23,7 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "id владельца=" + ownerId + " предмета " + itemDto.getName() + " не найден")
                 );
-        Item itemToSave = itemMapper.fromDto(itemDto, user);
+        Item itemToSave = itemMapper.toItem(itemDto, user);
         Item itemAdded = itemRepository.save(itemToSave);
         return itemMapper.toDto(itemAdded);
     }
