@@ -26,8 +26,7 @@ public class Item {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @ManyToOne
-    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
