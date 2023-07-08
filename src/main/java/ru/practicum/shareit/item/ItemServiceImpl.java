@@ -88,7 +88,7 @@ public class ItemServiceImpl implements ItemService {
         );
         List<Item> items = itemRepository.findByOwnerId(ownerId);
 
-        return items.stream().map(itemMapper::toDto).collect(Collectors.toList());
+        return items.stream().map(ItemMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -99,7 +99,7 @@ public class ItemServiceImpl implements ItemService {
         List<Item> items = itemRepository.findByNameOrDescriptionContainingIgnoreCase(text.toLowerCase()
                         , text.toLowerCase()).stream()
                 .filter(item -> item.isAvailable()).collect(Collectors.toList());
-        return items.stream().map(itemMapper::toDto).collect(Collectors.toList());
+        return items.stream().map(ItemMapper::toDto).collect(Collectors.toList());
 //        return null;
     }
 

@@ -6,7 +6,8 @@ import ru.practicum.shareit.user.User;
 
 @Component
 public class ItemMapper {
-    public ItemDto toDto(Item item) {
+
+    public static ItemDto toDto(Item item) {
         return ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())
