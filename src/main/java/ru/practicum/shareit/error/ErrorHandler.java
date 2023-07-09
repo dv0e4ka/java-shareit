@@ -54,4 +54,11 @@ public class ErrorHandler {
         log.error("Получен статус 400 Bad request {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handle(OwnerShipConflictException e) {
+        log.error("получен статус 404 Not found {}", e.getMessage(), e);
+        return new ErrorResponse(e.getMessage());
+    }
 }

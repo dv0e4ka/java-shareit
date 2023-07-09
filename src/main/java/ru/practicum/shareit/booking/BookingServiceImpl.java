@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.error.model.EntityNotFoundException;
+import ru.practicum.shareit.error.model.OwnerShipConflictException;
 import ru.practicum.shareit.error.model.UnknownStateException;
 import ru.practicum.shareit.error.model.ValidationException;
 import ru.practicum.shareit.item.Item;
@@ -36,6 +37,10 @@ public class BookingServiceImpl implements BookingService {
         long itemId = bookingDtoRequest.getItemId();
         bookingDtoRequest.setBookerId(bookerId);
         Item item = findItemByIdIfExist(itemId);
+        if (item.getOwner().getId() == bookerId) {
+            throw new OwnerShipConflictException(
+                    String.format("пользователь с id %d не может бронировать свой предмет %d", bookerId, itemId));
+        }
 
         if (!item.isAvailable()) {
             throw new ValidationException(String.format("предмет с id %d недоступен для бронирования", itemId));
@@ -56,9 +61,15 @@ public class BookingServiceImpl implements BookingService {
         long idOwnerInBooking = item.getOwner().getId();
 
         if (idOwnerInBooking != ownerId) {
-            throw new ValidationException(
+            throw new OwnerShipConflictException(
                     String.format("пользователь id %d не может дать ответ на бронь id %d, " +
                                     "так как не является владельцем предмета брони ", ownerId, bookingId));
+        }
+
+        if (booking.getStatus().equals(BookingStatus.APPROVED)) {
+            throw new ValidationException(
+                    String.format("бронь id %d уже имеет статус APPROVED", bookingId)
+            );
         }
 
         if (isApproved) {
@@ -75,7 +86,7 @@ public class BookingServiceImpl implements BookingService {
         long ownerId = booking.getBooker().getId();
         long bookerId = booking.getItem().getOwner().getId();
         if (userId != ownerId && userId != bookerId) {
-            throw new ValidationException(String.format(
+            throw new OwnerShipConflictException(String.format(
                     "пользователь id %d не может просматривать бронь id %d", userId, bookerId
             ));
         }
@@ -87,58 +98,77 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDtoResponse> getUserBookingsByState(long userId, String stateValue) {
         findUserByIdIfExist(userId);
         LocalDateTime now = LocalDateTime.now();
-        List<BookingDtoResponse> bookings = new ArrayList<>();
+        List<Booking> bookings = new ArrayList<>();
         try {
             State state = State.valueOf(stateValue);
             switch (state) {
                 case ALL:
-                    bookings = bookingRepository.findByBookerIdOrderByStartDesc(userId)
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponse)
-                            .collect(Collectors.toList());
+                    bookings = bookingRepository.findByBookerIdOrderByStartDesc(userId);
                     break;
                 case CURRENT:
-                    bookings = bookingRepository.findByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(userId, now, now)
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponse)
-                            .collect(Collectors.toList());
+                    bookings = bookingRepository.findByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(
+                            userId, now, now );
                     break;
                 case PAST:
-                    bookings = bookingRepository.findByBookerIdAndEndIsBeforeOrderByStartDesc(userId, now)
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponse)
-                            .collect(Collectors.toList());
+                    bookings = bookingRepository.findByBookerIdAndEndIsBeforeOrderByStartDesc(
+                            userId, now);
                     break;
                 case FUTURE:
-                    bookings = bookingRepository.findByBookerIdAndStartIsAfterOrderByStartDesc(userId, now)
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponse)
-                            .collect(Collectors.toList());
+                    bookings = bookingRepository.findByBookerIdAndStartIsAfterOrderByStartDesc(
+                            userId, now);
                     break;
-
-
                 case WAITING:
-                    bookings = bookingRepository.findByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.WAITING)
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponse)
-                            .collect(Collectors.toList());
+                    bookings = bookingRepository.findByBookerIdAndStatusOrderByStartDesc(
+                            userId, BookingStatus.WAITING);
                     break;
                 case REJECTED:
-                    bookings = bookingRepository.findByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED)
-                            .stream()
-                            .map(BookingMapper::toBookingDtoResponse)
-                            .collect(Collectors.toList());
+                    bookings = bookingRepository.findByBookerIdAndStatusOrderByStartDesc(
+                            userId, BookingStatus.REJECTED);
                     break;
             }
         } catch (IllegalArgumentException e) {
             throw new UnknownStateException("Unknown state: " + stateValue);
         }
-        return bookings;
+        return bookings.stream().map(BookingMapper::toBookingDtoResponse).collect(Collectors.toList());
     }
 
     @Override
-    public List<BookingDtoResponse> getOwnerBookingsByState(long ownerId, String state) {
-        return null;
+    public List<BookingDtoResponse> getOwnerBookingsByState(long ownerId, String stateValue) {
+        findUserByIdIfExist(ownerId);
+        LocalDateTime now = LocalDateTime.now();
+        List<Booking> bookings = new ArrayList<>();
+        try {
+            State state = State.valueOf(stateValue);
+            switch (state) {
+                case ALL:
+                    bookings = bookingRepository.findByItemOwnerIdOrderByStartDesc(ownerId);
+                    break;
+                case CURRENT:
+                    bookings = bookingRepository.findByItemOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(
+                            ownerId, now, now);
+                    break;
+                case PAST:
+                    bookings = bookingRepository.findByItemOwnerIdAndEndIsBeforeOrderByStartDesc(
+                            ownerId, now);
+                    break;
+                case FUTURE:
+                    bookings = bookingRepository.findByItemOwnerIdAndStartIsAfterOrderByStartDesc(
+                            ownerId, now);
+                    break;
+
+                case WAITING:
+                    bookings = bookingRepository.findByItemOwnerIdAndStatusOrderByStartDesc(
+                            ownerId, BookingStatus.WAITING);
+                    break;
+                case REJECTED:
+                    bookings = bookingRepository.findByItemOwnerIdAndStatusOrderByStartDesc(
+                            ownerId, BookingStatus.REJECTED);
+                    break;
+            }
+        } catch (IllegalArgumentException e) {
+            throw new UnknownStateException("Unknown state: " + stateValue);
+        }
+        return bookings.stream().map(BookingMapper::toBookingDtoResponse).collect(Collectors.toList());
     }
 
     @Override

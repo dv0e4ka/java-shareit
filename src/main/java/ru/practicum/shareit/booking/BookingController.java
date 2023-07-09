@@ -16,13 +16,6 @@ public class BookingController {
 
     private final BookingService bookingService;
 
-    @GetMapping
-    public List<BookingDtoResponse> getUserBookingsByState(@RequestHeader(Header.X_SHARED_USER_ID) long userId,
-                                                           @RequestParam(defaultValue = "ALL") String state) {
-        log.info("поступил запрос на получение Получение списка всех бронирований текущего пользователя id={}", userId);
-        return bookingService.getUserBookingsByState(userId, state);
-    }
-
     @PostMapping
     public BookingDtoResponse add(@RequestHeader(Header.X_SHARED_USER_ID) long bookerId,
                           @Valid @RequestBody BookingDtoRequest bookingDto) {
@@ -47,10 +40,20 @@ public class BookingController {
                 , bookingId, userId);
         return bookingService.get(userId, bookingId);
     }
-//
-//    @GetMapping("/{owner}")
-//    public List<BookingDtoResponse> getOwnerBookingsByState(@RequestHeader(Header.X_SHARED_USER_ID) long ownerId,
-//                                                    @RequestParam(defaultValue = "ALL") String state) {
-//        return null;
-//    }
+
+    @GetMapping
+    public List<BookingDtoResponse> getUserBookingsByState(@RequestHeader(Header.X_SHARED_USER_ID) long userId,
+                                                           @RequestParam(defaultValue = "ALL") String state) {
+        log.info("поступил запрос на получение списка всех бронирований текущего пользователя id={}", userId);
+        return bookingService.getUserBookingsByState(userId, state);
+    }
+
+    @GetMapping("/owner")
+    public List<BookingDtoResponse> getBookingsByOwnerByState(@RequestHeader(Header.X_SHARED_USER_ID) long ownerId,
+                                                    @RequestParam(defaultValue = "ALL") String state) {
+
+        log.info("поступил запрос на получение списка бронирований всех вещей владельца id={}", ownerId);
+
+        return bookingService.getOwnerBookingsByState(ownerId, state);
+    }
 }
