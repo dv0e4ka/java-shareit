@@ -3,10 +3,8 @@ package ru.practicum.shareit.booking;
 
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.item.ItemDto;
 import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.UserDto;
 import ru.practicum.shareit.user.UserMapper;
 
 @Component
@@ -25,13 +23,12 @@ public class BookingMapper {
 
 
     public static BookingDtoResponse toBookingDtoResponse(Booking booking) {
-        ItemDto itemDto = ItemMapper.toDto(booking.getItem());
-        UserDto userDto = UserMapper.toDto(booking.getBooker());
         BookingDtoResponse bookingDtoResponse = BookingDtoResponse.builder()
+                .id(booking.getId())
                 .start(booking.getStart())
                 .end(booking.getEnd())
-                .itemDto(itemDto)
-                .userDto(userDto)
+                .item(ItemMapper.toDto(booking.getItem()))
+                .booker(UserMapper.toDto(booking.getBooker()))
                 .status(booking.getStatus())
                 .build();
         return bookingDtoResponse;

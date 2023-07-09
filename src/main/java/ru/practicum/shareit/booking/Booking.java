@@ -1,9 +1,6 @@
 package ru.practicum.shareit.booking;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.user.User;
 
@@ -28,6 +25,7 @@ public class Booking {
     private LocalDateTime end;
 
     @ManyToOne(fetch = FetchType.LAZY)
+
     @JoinColumn(name = "booker_id", nullable = false)
     private User booker;
 

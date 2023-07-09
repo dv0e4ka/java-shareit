@@ -19,6 +19,8 @@ public class BookingController {
     @PostMapping
     public BookingDtoResponse add(@RequestHeader(Header.X_SHARED_USER_ID) long bookerId,
                           @Valid @RequestBody BookingDtoRequest bookingDto) {
+        log.info("поступил запрос на добавление бронирования от пользователя id={} " +
+                "вещи id={}", bookerId, bookingDto.getId());
         return bookingService.add(bookerId, bookingDto);
     }
 
@@ -26,6 +28,8 @@ public class BookingController {
     public BookingDtoResponse patch(@RequestHeader(Header.X_SHARED_USER_ID) long ownerId,
                             @PathVariable("bookingId") long bookingId,
                             @RequestParam boolean approved) {
+        log.info("поступил ответ на бронирования вещи id={} от пользователя id={}",
+                bookingId, ownerId);
         return null;
     }
 

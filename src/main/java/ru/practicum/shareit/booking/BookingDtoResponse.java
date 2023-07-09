@@ -13,7 +13,7 @@ public class BookingDtoResponse {
     private long id;
     private LocalDateTime start;
     private LocalDateTime end;
-    private UserDto userDto;
-    private ItemDto itemDto;
+    private UserDto booker;
+    private ItemDto item;
     private BookingStatus status;
 }

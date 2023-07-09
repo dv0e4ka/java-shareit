@@ -1,16 +1,15 @@
 package ru.practicum.shareit.booking;
 
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.error.model.EntityNotFoundException;
+import ru.practicum.shareit.error.model.ValidationException;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemRepository;
-import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.UserDto;
 import ru.practicum.shareit.user.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,10 +23,21 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDtoResponse add(long bookerId, BookingDtoRequest bookingDtoRequest) {
-        bookingDtoRequest.setBookerId(bookerId);
+        LocalDateTime start = bookingDtoRequest.getStart();
+        LocalDateTime end = bookingDtoRequest.getEnd();
+        if (start.isAfter(end) || start.equals(end)) {
+            throw new ValidationException("start should be before end");
+        }
         long itemId = bookingDtoRequest.getItemId();
+        bookingDtoRequest.setBookerId(bookerId);
+
+
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new EntityNotFoundException("предмет не найден c id=" + itemId));
+
+        if (!item.isAvailable()) {
+            throw new ValidationException(String.format("предмет с id={} недоступен для бронирования", itemId));
+        }
         User booker = userRepository.findById(bookerId)
                 .orElseThrow(() -> new EntityNotFoundException("пользователь не найден c id=" + itemId));
         bookingDtoRequest.setStatus(BookingStatus.WAITING);
