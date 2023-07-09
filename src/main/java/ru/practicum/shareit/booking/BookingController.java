@@ -16,6 +16,13 @@ public class BookingController {
 
     private final BookingService bookingService;
 
+    @GetMapping
+    public List<BookingDtoResponse> getUserBookingsByState(@RequestHeader(Header.X_SHARED_USER_ID) long userId,
+                                                           @RequestParam(defaultValue = "ALL") String state) {
+        log.info("поступил запрос на получение Получение списка всех бронирований текущего пользователя id={}", userId);
+        return bookingService.getUserBookingsByState(userId, state);
+    }
+
     @PostMapping
     public BookingDtoResponse add(@RequestHeader(Header.X_SHARED_USER_ID) long bookerId,
                           @Valid @RequestBody BookingDtoRequest bookingDto) {
@@ -39,13 +46,6 @@ public class BookingController {
         log.info("поступил запрос на получение информации о бронировании id={} от пользователя id={}"
                 , bookingId, userId);
         return bookingService.get(userId, bookingId);
-    }
-
-    @GetMapping
-        public List<BookingDtoResponse> getUserBookingsByState(@RequestHeader(Header.X_SHARED_USER_ID) long userId,
-                                                   @RequestParam(defaultValue = "ALL") String state) {
-        log.info("поступил запрос на получение Получение списка всех бронирований текущего пользователя id={}", userId);
-        return bookingService.getUserBookingsByState(userId, state);
     }
 //
 //    @GetMapping("/{owner}")

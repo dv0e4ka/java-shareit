@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.error.model.EntityNotFoundException;
+import ru.practicum.shareit.error.model.UnknownStateException;
 import ru.practicum.shareit.error.model.ValidationException;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemRepository;
@@ -10,7 +11,9 @@ import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -81,9 +84,56 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDtoResponse> getUserBookingsByState(long userId, String state) {
+    public List<BookingDtoResponse> getUserBookingsByState(long userId, String stateValue) {
+        findUserByIdIfExist(userId);
+        LocalDateTime now = LocalDateTime.now();
+        List<BookingDtoResponse> bookings = new ArrayList<>();
+        try {
+            State state = State.valueOf(stateValue);
+            switch (state) {
+                case ALL:
+                    bookings = bookingRepository.findByBookerIdOrderByStartDesc(userId)
+                            .stream()
+                            .map(BookingMapper::toBookingDtoResponse)
+                            .collect(Collectors.toList());
+                    break;
+                case CURRENT:
+                    bookings = bookingRepository.findByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(userId, now, now)
+                            .stream()
+                            .map(BookingMapper::toBookingDtoResponse)
+                            .collect(Collectors.toList());
+                    break;
+                case PAST:
+                    bookings = bookingRepository.findByBookerIdAndEndIsBeforeOrderByStartDesc(userId, now)
+                            .stream()
+                            .map(BookingMapper::toBookingDtoResponse)
+                            .collect(Collectors.toList());
+                    break;
+                case FUTURE:
+                    bookings = bookingRepository.findByBookerIdAndStartIsAfterOrderByStartDesc(userId, now)
+                            .stream()
+                            .map(BookingMapper::toBookingDtoResponse)
+                            .collect(Collectors.toList());
+                    break;
 
-        return null;
+
+                case WAITING:
+                    bookings = bookingRepository.findByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.WAITING)
+                            .stream()
+                            .map(BookingMapper::toBookingDtoResponse)
+                            .collect(Collectors.toList());
+                    break;
+                case REJECTED:
+                    bookings = bookingRepository.findByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED)
+                            .stream()
+                            .map(BookingMapper::toBookingDtoResponse)
+                            .collect(Collectors.toList());
+                    break;
+            }
+        } catch (IllegalArgumentException e) {
+            throw new UnknownStateException("Unknown state: " + stateValue);
+        }
+        return bookings;
     }
 
     @Override
