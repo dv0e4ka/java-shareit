@@ -10,7 +10,7 @@ import ru.practicum.shareit.user.UserMapper;
 @Component
 public class BookingMapper {
 
-    public Booking toBooking(BookingDtoRequest bookingDtoRequest, Item item, User booker) {
+    public static Booking toBooking(BookingDtoRequest bookingDtoRequest, Item item, User booker) {
         return Booking.builder()
                 .start(bookingDtoRequest.getStart())
                 .end(bookingDtoRequest.getEnd())

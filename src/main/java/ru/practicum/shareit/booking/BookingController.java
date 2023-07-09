@@ -28,26 +28,29 @@ public class BookingController {
     public BookingDtoResponse patch(@RequestHeader(Header.X_SHARED_USER_ID) long ownerId,
                             @PathVariable("bookingId") long bookingId,
                             @RequestParam boolean approved) {
-        log.info("поступил ответ на бронирования вещи id={} от пользователя id={}",
-                bookingId, ownerId);
-        return null;
+        log.info("поступил ответ на бронирования вещи id={} от пользователя id={}"
+                , bookingId, ownerId);
+        return bookingService.patch(ownerId, bookingId, approved);
     }
 
     @GetMapping("/{bookingId}")
     public BookingDtoResponse get(@RequestHeader(Header.X_SHARED_USER_ID) long userId,
                           @PathVariable("bookingId") long bookingId) {
-        return null;
+        log.info("поступил запрос на получение информации о бронировании id={} от пользователя id={}"
+                , bookingId, userId);
+        return bookingService.get(userId, bookingId);
     }
 
     @GetMapping
         public List<BookingDtoResponse> getUserBookingsByState(@RequestHeader(Header.X_SHARED_USER_ID) long userId,
                                                    @RequestParam(defaultValue = "ALL") String state) {
-        return null;
+        log.info("поступил запрос на получение Получение списка всех бронирований текущего пользователя id={}", userId);
+        return bookingService.getUserBookingsByState(userId, state);
     }
-
-    @GetMapping("/{owner}")
-    public List<BookingDtoResponse> getOwnerBookingsByState(@RequestHeader(Header.X_SHARED_USER_ID) long ownerId,
-                                                    @RequestParam(defaultValue = "ALL") String state) {
-        return null;
-    }
+//
+//    @GetMapping("/{owner}")
+//    public List<BookingDtoResponse> getOwnerBookingsByState(@RequestHeader(Header.X_SHARED_USER_ID) long ownerId,
+//                                                    @RequestParam(defaultValue = "ALL") String state) {
+//        return null;
+//    }
 }
