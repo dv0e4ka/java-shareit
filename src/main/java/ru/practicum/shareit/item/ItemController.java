@@ -3,8 +3,9 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemWithBookingInfoDto;
+import ru.practicum.shareit.item.dto.ItemWithBookingCommentInfoDto;
 import ru.practicum.shareit.util.Header;
 
 import javax.validation.Valid;
@@ -35,14 +36,14 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemWithBookingInfoDto findById(@RequestHeader(Header.X_SHARED_USER_ID) long userId,
-                                           @PathVariable long itemId) {
+    public ItemWithBookingCommentInfoDto findById(@RequestHeader(Header.X_SHARED_USER_ID) long userId,
+                                                  @PathVariable long itemId) {
         log.info("поступил запрос на поиск вещи id={}", itemId);
         return itemService.findById(itemId, userId);
     }
 
     @GetMapping
-    public List<ItemWithBookingInfoDto> getAllItemsByOwner(@RequestHeader(Header.X_SHARED_USER_ID) long ownerId) {
+    public List<ItemWithBookingCommentInfoDto> getAllItemsByOwner(@RequestHeader(Header.X_SHARED_USER_ID) long ownerId) {
         log.info("поступил запрос на поиск своих вещей от владельца id={}", ownerId);
         return itemService.findAllByOwnerId(ownerId);
     }
@@ -53,5 +54,13 @@ public class ItemController {
     public List<ItemDto> findByParam(@RequestParam String text) {
         log.info("поступил запрос на поиск доступной вещи по параметру={}", text);
         return itemService.findByParam(text);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@PathVariable long itemId,
+                                 @RequestHeader(Header.X_SHARED_USER_ID) long userId,
+                                 @Valid @RequestBody  CommentDto commentDto) {
+        log.info("поступил запрос на добавление коммента на предмет id={}, от пользователя id={}", itemId, userId);
+        return itemService.saveComment(commentDto, userId, itemId);
     }
 }

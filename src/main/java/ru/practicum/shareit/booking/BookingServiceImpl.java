@@ -10,8 +10,8 @@ import ru.practicum.shareit.error.model.EntityNotFoundException;
 import ru.practicum.shareit.error.model.OwnerShipConflictException;
 import ru.practicum.shareit.error.model.UnknownStateException;
 import ru.practicum.shareit.error.model.ValidationException;
-import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.item.ItemRepository;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
