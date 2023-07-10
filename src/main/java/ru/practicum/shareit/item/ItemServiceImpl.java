@@ -57,8 +57,6 @@ public class ItemServiceImpl implements ItemService {
             throw new EntityNotFoundException(
                     "предмет " + itemDto.getName() + " id=" + itemDto.getId()
                             + " не владеет пользователь с id=" + itemDto.getOwner());
-        } else {
-
         }
         User user = userRepository.findById(ownerId)
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -137,8 +135,8 @@ public class ItemServiceImpl implements ItemService {
         if (text.isBlank()) {
             return Collections.emptyList();
         }
-        List<Item> items = itemRepository.findByNameOrDescriptionContainingIgnoreCase(text.toLowerCase()
-                        , text.toLowerCase()).stream()
+        List<Item> items = itemRepository.findByNameOrDescriptionContainingIgnoreCase(text.toLowerCase(),
+                        text.toLowerCase()).stream()
                 .filter(Item::isAvailable).collect(Collectors.toList());
         return items.stream().map(ItemMapper::toDto).collect(Collectors.toList());
     }
@@ -155,7 +153,7 @@ public class ItemServiceImpl implements ItemService {
             throw new ValidationException("no comment exception");
         }
         Comment comment = CommentMapper.toComment(commentDto,  booking.getBooker(), booking.getItem());
-        return CommentMapper.ToDto(commentRepository.save(comment));
+        return CommentMapper.toDto(commentRepository.save(comment));
     }
 
     private ItemWithBookingCommentInfoDto addComment(
@@ -164,12 +162,12 @@ public class ItemServiceImpl implements ItemService {
 
         itemId.ifPresent(id -> {
             List<Comment> commentList = commentRepository.findAllByItemId(id);
-            item.setComments(commentList.stream().map(CommentMapper::ToDto).collect(Collectors.toList()));
+            item.setComments(commentList.stream().map(CommentMapper::toDto).collect(Collectors.toList()));
         });
 
         userId.ifPresent(id -> {
             List<Comment> commentList = commentRepository.findAllByUserId(id);
-            item.setComments(commentList.stream().map(CommentMapper::ToDto).collect(Collectors.toList()));
+            item.setComments(commentList.stream().map(CommentMapper::toDto).collect(Collectors.toList()));
         });
         return item;
     }

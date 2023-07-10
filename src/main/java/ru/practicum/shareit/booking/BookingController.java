@@ -30,16 +30,15 @@ public class BookingController {
     public BookingDtoResponse patch(@RequestHeader(Header.X_SHARED_USER_ID) long ownerId,
                             @PathVariable("bookingId") long bookingId,
                             @RequestParam boolean approved) {
-        log.info("поступил ответ на бронирования вещи id={} от пользователя id={}"
-                , bookingId, ownerId);
+        log.info("поступил ответ на бронирования вещи id={} от пользователя id={}", bookingId, ownerId);
         return bookingService.patch(ownerId, bookingId, approved);
     }
 
     @GetMapping("/{bookingId}")
     public BookingDtoResponse get(@RequestHeader(Header.X_SHARED_USER_ID) long userId,
                           @PathVariable("bookingId") long bookingId) {
-        log.info("поступил запрос на получение информации о бронировании id={} от пользователя id={}"
-                , bookingId, userId);
+        log.info("поступил запрос на получение информации о бронировании id={} от пользователя id={}",
+                bookingId, userId);
         return bookingService.get(userId, bookingId);
     }
 
