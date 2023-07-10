@@ -33,10 +33,4 @@ public class Item {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id")
     private ItemRequest request;
-
-
-    public long setId(long id) {
-        this.id = id;
-        return id;
-    }
 }

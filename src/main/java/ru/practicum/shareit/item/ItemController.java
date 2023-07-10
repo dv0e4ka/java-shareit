@@ -3,6 +3,8 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemWithBookingInfoDto;
 import ru.practicum.shareit.util.Header;
 
 import javax.validation.Valid;
@@ -23,23 +25,26 @@ public class ItemController {
     }
 
     @PatchMapping("/{id}")
-    public ItemDto patch(@PathVariable long id, @RequestHeader(Header.X_SHARED_USER_ID) long ownerId, @RequestBody ItemDto itemDto) {
+    public ItemDto patch(@PathVariable long id,
+                         @RequestHeader(Header.X_SHARED_USER_ID) long ownerId,
+                         @RequestBody ItemDto itemDto) {
         log.info("получен запрос на обновление предмета {} у владельца={}", itemDto.getName(), ownerId);
         itemDto.setOwner(ownerId);
         itemDto.setId(id);
         return itemService.patch(itemDto);
     }
 
-    @GetMapping("/{id}")
-    public ItemDto findById(@PathVariable long id) {
-        log.info("поступил запрос на поиск вещи id={}", id);
-        return itemService.findById(id);
+    @GetMapping("/{itemId}")
+    public ItemWithBookingInfoDto findById(@RequestHeader(Header.X_SHARED_USER_ID) long userId,
+                                           @PathVariable long itemId) {
+        log.info("поступил запрос на поиск вещи id={}", itemId);
+        return itemService.findById(itemId, userId);
     }
 
     @GetMapping
-    public List<ItemDto> getItemsAll(@RequestHeader(Header.X_SHARED_USER_ID) long ownerId) {
+    public List<ItemWithBookingInfoDto> getAllItemsByOwner(@RequestHeader(Header.X_SHARED_USER_ID) long ownerId) {
         log.info("поступил запрос на поиск своих вещей от владельца id={}", ownerId);
-        return itemService.findAllByUserId(ownerId);
+        return itemService.findAllByOwnerId(ownerId);
     }
 
 

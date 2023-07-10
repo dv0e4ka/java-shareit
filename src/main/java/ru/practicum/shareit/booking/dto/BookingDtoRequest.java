@@ -1,7 +1,8 @@
-package ru.practicum.shareit.booking;
+package ru.practicum.shareit.booking.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import ru.practicum.shareit.booking.enums.BookingStatus;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;

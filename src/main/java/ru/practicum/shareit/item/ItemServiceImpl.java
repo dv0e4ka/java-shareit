@@ -2,19 +2,27 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.booking.BookingMapper;
+import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.booking.enums.BookingStatus;
 import ru.practicum.shareit.error.model.EntityNotFoundException;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemWithBookingInfoDto;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
-    private final ItemMapper itemMapper;
     private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
 
     @Override
     public ItemDto add(ItemDto itemDto) {
@@ -23,9 +31,9 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "id владельца=" + ownerId + " предмета " + itemDto.getName() + " не найден")
                 );
-        Item itemToSave = itemMapper.toItem(itemDto, user);
+        Item itemToSave = ItemMapper.toItem(itemDto, user);
         Item itemAdded = itemRepository.save(itemToSave);
-        return itemMapper.toDto(itemAdded);
+        return ItemMapper.toDto(itemAdded);
     }
 
     @Override
@@ -68,27 +76,46 @@ public class ItemServiceImpl implements ItemService {
         itemDtoAvailable.ifPresent(available -> item.setAvailable(available));
 
         Item itemAdded = itemRepository.save(item);
-        return itemMapper.toDto(itemAdded);
+        return ItemMapper.toDto(itemAdded);
     }
 
     @Override
-    public ItemDto findById(long id) {
-        Item item = itemRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(
-                        "id предмета " + id + " не найден"
+    public ItemWithBookingInfoDto findById(long itemId, long ownerId) {
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new EntityNotFoundException(
+                        "id предмета " + itemId + " не найден"
                 )
         );
-        return itemMapper.toDto(item);
+        ItemWithBookingInfoDto itemDto = ItemMapper.toItemWithBookingInfoDto(item);
+        if (item.getOwner().getId() == ownerId) {
+            addDate(itemDto, LocalDateTime.now());
+        }
+        return itemDto;
     }
 
     @Override
-    public List<ItemDto> findAllByUserId(long ownerId) {
+    public List<ItemWithBookingInfoDto> findAllByOwnerId(long ownerId) {
         userRepository.findById(ownerId).orElseThrow(() -> new EntityNotFoundException(
                         "id владельца=" + ownerId + " не найден"
                 )
         );
-        List<Item> items = itemRepository.findByOwnerId(ownerId);
+        List<ItemWithBookingInfoDto> itemsDto = itemRepository.findByOwnerId(ownerId).stream()
+                .map(ItemMapper::toItemWithBookingInfoDto)
+                .collect(Collectors.toList());
+        itemsDto.forEach(item -> addDate(item, LocalDateTime.now()));
+        itemsDto.sort(Comparator.comparing(ItemWithBookingInfoDto::getId));
+        return itemsDto;
+    }
 
-        return items.stream().map(ItemMapper::toDto).collect(Collectors.toList());
+    private void addDate(ItemWithBookingInfoDto itemDto,  LocalDateTime now) {
+        List<Booking> lastBooking = bookingRepository.findFirstByItemIdAndEndBeforeOrderByEndDesc(itemDto.getId(), now);
+        if (lastBooking.isEmpty()) return;
+        itemDto.setLastBooking(BookingMapper.toBookingForItemOutDto(lastBooking.get(0)));
+
+        List<Booking> nextBooking = bookingRepository.findFirstByItemIdAndStartAfterAndStatusNotOrderByStartAsc(
+                itemDto.getId(), now, BookingStatus.REJECTED
+        );
+        if (nextBooking.isEmpty()) return;
+        itemDto.setNextBooking(BookingMapper.toBookingForItemOutDto(nextBooking.get(0)));
     }
 
     @Override
@@ -98,9 +125,8 @@ public class ItemServiceImpl implements ItemService {
         }
         List<Item> items = itemRepository.findByNameOrDescriptionContainingIgnoreCase(text.toLowerCase()
                         , text.toLowerCase()).stream()
-                .filter(item -> item.isAvailable()).collect(Collectors.toList());
+                .filter(Item::isAvailable).collect(Collectors.toList());
         return items.stream().map(ItemMapper::toDto).collect(Collectors.toList());
-//        return null;
     }
 
     @Override

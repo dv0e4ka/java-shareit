@@ -2,6 +2,10 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.dto.BookingDtoRequest;
+import ru.practicum.shareit.booking.dto.BookingDtoResponse;
+import ru.practicum.shareit.booking.enums.BookingStatus;
+import ru.practicum.shareit.booking.enums.State;
 import ru.practicum.shareit.error.model.EntityNotFoundException;
 import ru.practicum.shareit.error.model.OwnerShipConflictException;
 import ru.practicum.shareit.error.model.UnknownStateException;
@@ -21,7 +25,6 @@ import java.util.stream.Collectors;
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
-    private final BookingMapper bookingMapper;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
 
@@ -48,10 +51,9 @@ public class BookingServiceImpl implements BookingService {
 
         User booker = findUserByIdIfExist(bookerId);
         bookingDtoRequest.setStatus(BookingStatus.WAITING);
-        Booking bookingToAdd = bookingMapper.toBooking(bookingDtoRequest, item, booker);
+        Booking bookingToAdd = BookingMapper.toBooking(bookingDtoRequest, item, booker);
         Booking bookingAdded = bookingRepository.save(bookingToAdd);
-        BookingDtoResponse bookingDtoResponse = bookingMapper.toBookingDtoResponse(bookingAdded);
-        return bookingDtoResponse;
+        return BookingMapper.toBookingDtoResponse(bookingAdded);
     }
 
     @Override
