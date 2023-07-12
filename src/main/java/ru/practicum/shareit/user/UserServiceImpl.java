@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.error.model.EntityNotFoundException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,17 +13,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
 
     @Override
     public UserDto add(UserDto userDto) {
-        User userToSave = userMapper.fromDto(userDto);
+        User userToSave = UserMapper.fromDto(userDto);
         User userAdded = userRepository.save(userToSave);
         System.out.println(userAdded.getEmail() + " " + userAdded.getId());
-        return userMapper.toDto(userAdded);
+        return UserMapper.toDto(userAdded);
     }
 
     @Override
+    @Transactional
     public UserDto patch(long id, UserDto userDto) {
         final User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден c id=" + id));
@@ -43,14 +44,14 @@ public class UserServiceImpl implements UserService {
         });
 
         User savedUser = userRepository.save(user);
-        return userMapper.toDto(savedUser);
+        return UserMapper.toDto(savedUser);
     }
 
     @Override
     public UserDto findById(long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден c id=" + id));
-        return userMapper.toDto(user);
+        return UserMapper.toDto(user);
     }
 
     @Override
@@ -60,6 +61,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void delete(long id) {
         userRepository.deleteById(id);
     }
@@ -69,8 +71,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsById(id);
     }
 
-
-    // TODO этот метод для "своих" (мб спец дто делать надо)
     @Override
     public User findUser(long id) {
         return userRepository.findById(id)

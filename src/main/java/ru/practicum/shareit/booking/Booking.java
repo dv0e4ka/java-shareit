@@ -8,12 +8,13 @@ import ru.practicum.shareit.user.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
+
 @Entity
 @Table(name = "bookings")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter @Setter
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

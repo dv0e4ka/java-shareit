@@ -15,6 +15,7 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public BookingDtoResponse add(long bookerId, BookingDtoRequest bookingDtoRequest) {
         LocalDateTime start = bookingDtoRequest.getStart();
         LocalDateTime end = bookingDtoRequest.getEnd();
@@ -57,6 +59,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public BookingDtoResponse patch(long ownerId, long bookingId, boolean isApproved) {
         Booking booking = findBookingByIdIfExist(bookingId);
         Item item = booking.getItem();

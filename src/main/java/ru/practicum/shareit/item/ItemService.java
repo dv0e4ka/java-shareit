@@ -22,4 +22,6 @@ public interface ItemService {
     public void deleteById(long id);
 
     public CommentDto saveComment(CommentDto commentDto, long userId, long itemId);
+
+
 }

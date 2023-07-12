@@ -1,7 +1,7 @@
 package ru.practicum.shareit.booking;
 
 
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.dto.BookingDtoRequest;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
 import ru.practicum.shareit.booking.dto.BookingForItemOutDto;
@@ -10,7 +10,7 @@ import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserMapper;
 
-@Component
+@UtilityClass
 public class BookingMapper {
 
     public static Booking toBooking(BookingDtoRequest bookingDtoRequest, Item item, User booker) {
