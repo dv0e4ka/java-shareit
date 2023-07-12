@@ -137,13 +137,13 @@ public class ItemServiceImpl implements ItemService {
                 if (bookingMap.containsKey(id)) {
                     lastBooking = bookingMap.get(id).stream()
                             .sorted(Comparator.comparing(Booking::getStart))
-                            .filter(booking -> booking.getStatus()==BookingStatus.APPROVED)
+                            .filter(booking -> booking.getStatus() == BookingStatus.APPROVED)
                             .dropWhile(booking -> booking.getStart().isAfter(now))
                             .findFirst()
                             .orElse(null);
                     nextBooking = bookingMap.get(id).stream()
                             .sorted(Comparator.comparing(Booking::getStart))
-                            .filter(booking -> booking.getStatus()==BookingStatus.APPROVED)
+                            .filter(booking -> booking.getStatus() == BookingStatus.APPROVED)
                             .dropWhile(booking -> booking.getStart().isBefore(now))
                             .findFirst()
                             .orElse(null);
