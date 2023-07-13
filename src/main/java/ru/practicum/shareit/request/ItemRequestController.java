@@ -24,9 +24,10 @@ public class ItemRequestController {
     }
 
     @GetMapping("/{requestId}")
-    public ItemRequestDto getById(@PathVariable long requestId) {
+    public ItemRequestDto getById(@PathVariable long requestId,
+                                  @RequestHeader (Header.X_SHARED_USER_ID) long userId) {
         log.info("поступил запрос на поиск заявки по id={}", requestId);
-        return itemRequestService.findById(requestId);
+        return itemRequestService.findById(requestId, userId);
     }
 
     @GetMapping

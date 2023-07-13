@@ -10,5 +10,5 @@ public interface ItemRequestService {
 
     public List<ItemRequestDto> findAll(long from, int size);
 
-    public ItemRequestDto findById(long id);
+    public ItemRequestDto findById(long id, long userId);
 }
