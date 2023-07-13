@@ -2,11 +2,14 @@ package ru.practicum.shareit.request;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.util.Header;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import java.awt.print.Pageable;
 import java.util.List;
 
 @RestController
@@ -37,9 +40,11 @@ public class ItemRequestController {
     }
 
     @GetMapping("/all")
-    public List<ItemRequestDto> getAll(@RequestParam long from,
-                                       @RequestParam @Min(0) int size) {
-        log.info("поступил запрос на получение всех заявок");
-        return itemRequestService.findAll(from, size);
+    public List<ItemRequestDto> getAll(@RequestParam (defaultValue = "0") int from,
+                                       @RequestParam (defaultValue = "10") int size,
+                                       @RequestHeader (Header.X_SHARED_USER_ID) long userId) {
+        log.info("получен запрос на предоставление всех заявок");
+
+        return itemRequestService.findAll(from, size, userId);
     }
 }
