@@ -17,9 +17,9 @@ public class ItemRequestController {
     private final ItemRequestService itemRequestService;
 
     @PostMapping
-    public ItemRequestDto save(@Valid ItemRequestDto itemRequestDto,
+    public ItemRequestDto save(@Valid @RequestBody ItemRequestDto itemRequestDto,
                                @RequestHeader (Header.X_SHARED_USER_ID) long userId) {
-        log.info("поступил запрос на поиск вещи от пользователя id={}", userId);
+        log.info("поступил запрос на сохранение заявки на вещь от пользователя id={}", userId);
         return itemRequestService.add(itemRequestDto, userId);
     }
 
