@@ -23,6 +23,12 @@ public class ItemRequestController {
         return itemRequestService.add(itemRequestDto, userId);
     }
 
+    @GetMapping("/{requestId}")
+    public ItemRequestDto getById(@PathVariable long requestId) {
+        log.info("поступил запрос на поиск заявки по id={}", requestId);
+        return itemRequestService.findById(requestId);
+    }
+
     @GetMapping
     public List<ItemRequestDto> getAllByUser(@RequestHeader (Header.X_SHARED_USER_ID) long userId) {
         log.info("поступил запрос на выдачу всех своих заявок от пользователя id={}", userId);
@@ -34,11 +40,5 @@ public class ItemRequestController {
                                        @RequestParam @Min(0) int size) {
         log.info("поступил запрос на получение всех заявок");
         return itemRequestService.findAll(from, size);
-    }
-
-    @GetMapping("/{requestId}")
-    public ItemRequestDto getById(@PathVariable long requestId) {
-        log.info("поступил запрос на поиск заявки по id={}", requestId);
-        return itemRequestService.findById(requestId);
     }
 }
