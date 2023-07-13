@@ -9,6 +9,7 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRepository itemRepository;
 
     @Override
+    @Transactional
     public ItemRequestDto add(ItemRequestDto itemRequestDto, long userId) {
         User requester = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден c id=" + userId));
@@ -46,9 +48,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public List<ItemRequestDto> findAllByUser(long userId) {
         User requester = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден c id=" + userId));
-        List<ItemRequest> itemRequestList = itemRequestRepository.findAllByRequesterOrderById(userId);
-        List<ItemRequestDto> itemDtos = setItemsInfo(itemRequestList);
-        return itemDtos;
+        List<ItemRequest> itemRequestList = itemRequestRepository.findByRequesterIdOrderById(userId);
+        return setItemsInfo(itemRequestList);
     }
 
     private List<ItemRequestDto> setItemsInfo(List<ItemRequest> itemRequestList) {
@@ -72,7 +73,10 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 }
             });
         } else {
-            itemRequestList.forEach(itemRequest -> ItemRequestMapper.toItemRequestDto(itemRequest, new ArrayList<>()));
+            itemRequestList.forEach(itemRequest -> {
+                ItemRequestDto itemRequestDto = ItemRequestMapper.toItemRequestDto(itemRequest, new ArrayList<>());
+                itemRequestDtoList.add(itemRequestDto);
+            });
         }
         return itemRequestDtoList;
     }
