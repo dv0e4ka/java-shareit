@@ -48,8 +48,6 @@ public class ItemController {
         return itemService.findAllByOwnerId(ownerId);
     }
 
-
-
     @GetMapping("/search")
     public List<ItemDto> findByParam(@RequestParam String text) {
         log.info("поступил запрос на поиск доступной вещи по параметру={}", text);

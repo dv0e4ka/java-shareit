@@ -9,6 +9,7 @@ import ru.practicum.shareit.util.Header;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 import java.awt.print.Pageable;
 import java.util.List;
 
@@ -40,8 +41,8 @@ public class ItemRequestController {
     }
 
     @GetMapping("/all")
-    public List<ItemRequestDto> getAll(@RequestParam (defaultValue = "0") int from,
-                                       @RequestParam (defaultValue = "10") int size,
+    public List<ItemRequestDto> getAll(@Positive @RequestParam (defaultValue = "0") int from,
+                                       @Positive @RequestParam (defaultValue = "10") int size,
                                        @RequestHeader (Header.X_SHARED_USER_ID) long userId) {
         log.info("получен запрос на предоставление всех заявок");
 

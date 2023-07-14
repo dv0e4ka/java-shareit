@@ -15,9 +15,11 @@ public interface BookingService {
 
     public BookingDtoResponse get(long userId, long bookingId);
 
-    public List<BookingDtoResponse> getUserBookingsByState(long userId, String state);
+    //TODO: пагинация
+    public List<BookingDtoResponse> getUserBookingsByState(long userId, String state, int from, int size);
 
-    public List<BookingDtoResponse> getOwnerBookingsByState(long ownerId, String state);
+    //TODO: пагинация
+    public List<BookingDtoResponse> getOwnerBookingsByState(long ownerId, String state, int from, int size);
 
     public Booking findBookingByIdIfExist(long id);
 
