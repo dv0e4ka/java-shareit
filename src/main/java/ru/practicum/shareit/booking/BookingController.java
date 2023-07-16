@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDtoRequest;
@@ -23,6 +24,7 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public BookingDtoResponse add(@RequestHeader(Header.X_SHARED_USER_ID) long bookerId,
                                   @Valid @RequestBody BookingDtoRequest bookingDto) {
         log.info("поступил запрос на добавление бронирования от пользователя id={} " +
