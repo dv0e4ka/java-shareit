@@ -25,8 +25,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.RequestEntity.patch;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
@@ -260,7 +258,4 @@ class BookingControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
-
-
-
 }

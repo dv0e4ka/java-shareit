@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -19,6 +20,7 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ItemDto add(@RequestHeader(Header.X_SHARED_USER_ID) long ownerId, @Valid @RequestBody ItemDto itemDto) {
         log.info("получен запрос на добавление предмета {} владельца={}", itemDto.getName(), ownerId);
         itemDto.setOwner(ownerId);
@@ -53,6 +55,7 @@ public class ItemController {
         log.info("поступил запрос на поиск доступной вещи по параметру={}", text);
         return itemService.findByParam(text);
     }
+
 
     @PostMapping("/{itemId}/comment")
     public CommentDto addComment(@PathVariable long itemId,
