@@ -2,25 +2,26 @@ package ru.practicum.shareit.request;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.util.Header;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
-import java.awt.print.Pageable;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/requests")
 @AllArgsConstructor
 @Slf4j
+@Validated
 public class ItemRequestController {
     private final ItemRequestService itemRequestService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ItemRequestDto save(@Valid @RequestBody ItemRequestDto itemRequestDto,
                                @RequestHeader (Header.X_SHARED_USER_ID) long userId) {
         log.info("поступил запрос на сохранение заявки на вещь от пользователя id={}", userId);
@@ -41,7 +42,7 @@ public class ItemRequestController {
     }
 
     @GetMapping("/all")
-    public List<ItemRequestDto> getAll(@Positive @RequestParam (defaultValue = "0") int from,
+    public List<ItemRequestDto> getAll(@Min(0) @RequestParam (defaultValue = "0") int from,
                                        @Positive @RequestParam (defaultValue = "10") int size,
                                        @RequestHeader (Header.X_SHARED_USER_ID) long userId) {
         log.info("получен запрос на предоставление всех заявок");
