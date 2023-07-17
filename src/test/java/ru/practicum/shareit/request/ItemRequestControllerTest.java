@@ -1,7 +1,6 @@
 package ru.practicum.shareit.request;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import ru.practicum.shareit.util.Header;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -99,7 +97,7 @@ class ItemRequestControllerTest {
     void getAllByUser() throws Exception {
         when(itemRequestService.findAllByUser(userId)).thenReturn(itemRequestDtoOutList);
 
-        mvc.perform(get(URL )
+        mvc.perform(get(URL)
                         .header(Header.X_SHARED_USER_ID, 1L))
                 .andDo(print())
                 .andExpect(status().isOk())

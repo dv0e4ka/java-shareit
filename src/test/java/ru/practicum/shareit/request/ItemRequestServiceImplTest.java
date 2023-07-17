@@ -158,7 +158,7 @@ class ItemRequestServiceImplTest {
     @Test
     void findById_whenUserNotFound_fail() {
         when(userRepository.findById(999L)).thenThrow(new EntityNotFoundException(""));
-        Assertions.assertThrows(EntityNotFoundException.class, () -> itemRequestService.findById(1l, 999L));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> itemRequestService.findById(1L, 999L));
     }
 
     @Test
@@ -166,7 +166,7 @@ class ItemRequestServiceImplTest {
         when(userRepository.findById(requesterId)).thenReturn(Optional.ofNullable(requester));
         when(itemRequestRepository.findById(999L)).thenThrow(new EntityNotFoundException(""));
 
-        Assertions.assertThrows(EntityNotFoundException.class, () -> itemRequestService.findById(999l, 1L));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> itemRequestService.findById(999L, 1L));
 
     }
 
@@ -184,7 +184,7 @@ class ItemRequestServiceImplTest {
     void findAllByUser() {
 
         when(userRepository.findById(requesterId)).thenReturn(Optional.ofNullable(requester));
-        when(itemRequestRepository.findByRequesterIdOrderById(1l)).thenReturn(List.of(itemRequestOut));
+        when(itemRequestRepository.findByRequesterIdOrderById(1L)).thenReturn(List.of(itemRequestOut));
 
         Assertions.assertEquals(itemRequestDtoOut, itemRequestService.findAllByUser(1L).get(0));
     }

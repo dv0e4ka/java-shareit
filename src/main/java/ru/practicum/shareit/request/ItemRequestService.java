@@ -1,6 +1,5 @@
 package ru.practicum.shareit.request;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 public interface ItemRequestService {

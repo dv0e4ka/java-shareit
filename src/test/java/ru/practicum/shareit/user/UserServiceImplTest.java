@@ -128,6 +128,6 @@ class UserServiceImplTest {
     void isContains() {
         when(userRepository.existsById(1L)).thenReturn(true);
 
-        Assertions.assertTrue( userService.isContains(1L));
+        Assertions.assertTrue(userService.isContains(1L));
     }
 }
