@@ -21,6 +21,7 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.ItemRequestDto;
 import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
@@ -80,10 +81,10 @@ class ItemServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        startLastBookingDate =  LocalDateTime.of(2000, 1, 1, 0, 0);
-        endLastBookingDate =  LocalDateTime.of(2001, 1, 1, 0, 0);
-        startNextBookingDate =  LocalDateTime.of(2024, 1, 1, 0, 0);
-        endNextBookingDate =  LocalDateTime.of(2025, 1, 1, 0, 0);
+        startLastBookingDate = LocalDateTime.of(2000, 1, 1, 0, 0);
+        endLastBookingDate = LocalDateTime.of(2001, 1, 1, 0, 0);
+        startNextBookingDate = LocalDateTime.of(2024, 1, 1, 0, 0);
+        endNextBookingDate = LocalDateTime.of(2025, 1, 1, 0, 0);
 
         owner = User.builder()
                 .id(1L)
@@ -331,21 +332,25 @@ class ItemServiceImplTest {
         when(bookingRepository.findFirstByItemIdAndStartBeforeOrderByEndDesc(eq(itemDto.getId()), any(LocalDateTime.class)))
                 .thenReturn(lastBookingList);
         when(bookingRepository.findFirstByItemIdAndStartAfterAndStatusNotOrderByStartAsc(
-                        eq(itemDto.getId()), any(LocalDateTime.class), eq(BookingStatus.REJECTED)))
+                eq(itemDto.getId()), any(LocalDateTime.class), eq(BookingStatus.REJECTED)))
                 .thenReturn(nextBookingList);
         when(commentRepository.findAllByItemId(item.getId())).thenReturn(List.of(comment));
 
-        Assertions.assertEquals(itemBookingCommentDto.getId(), itemService.findById(1L, 1L).getId());
-        Assertions.assertEquals(itemBookingCommentDto.getName(), itemService.findById(1L, 1L).getName());
-        Assertions.assertEquals(itemBookingCommentDto.getDescription(), itemService.findById(1L, 1L).getDescription());
-        Assertions.assertEquals(itemBookingCommentDto.getOwner(), itemService.findById(1L, 1L).getOwner());
-        Assertions.assertEquals(itemBookingCommentDto.getAvailable(), itemService.findById(1L, 1L).getAvailable());
-        Assertions.assertEquals(itemBookingCommentDto.getLastBooking(), itemService.findById(1L, 1L).getLastBooking());
-        Assertions.assertEquals(itemBookingCommentDto.getNextBooking(), itemService.findById(1L, 1L).getNextBooking());
-        Assertions.assertEquals(itemBookingCommentDto.getComments().size(), itemService.findById(1L, 1L).getComments().size());
-        Assertions.assertEquals(itemBookingCommentDto.getComments().get(0).getId(), itemService.findById(1L, 1L).getComments().get(0).getId());
-        Assertions.assertEquals(itemBookingCommentDto.getComments().get(0).getText(), itemService.findById(1L, 1L).getComments().get(0).getText());
-        Assertions.assertEquals(itemBookingCommentDto.getComments().get(0).getAuthorName(), itemService.findById(1L, 1L).getComments().get(0).getAuthorName());
+        ItemWithBookingCommentInfoDto actual = itemService.findById(1L, 1L);
+
+        Assertions.assertEquals(itemBookingCommentDto.getId(), actual.getId());
+        Assertions.assertEquals(itemBookingCommentDto.getName(), actual.getName());
+        Assertions.assertEquals(itemBookingCommentDto.getDescription(), actual.getDescription());
+        Assertions.assertEquals(itemBookingCommentDto.getOwner(), actual.getOwner());
+        Assertions.assertEquals(itemBookingCommentDto.getAvailable(), actual.getAvailable());
+        Assertions.assertEquals(itemBookingCommentDto.getLastBooking(), actual.getLastBooking());
+        Assertions.assertEquals(itemBookingCommentDto.getNextBooking(), actual.getNextBooking());
+        Assertions.assertEquals(itemBookingCommentDto.getComments().size(), actual.getComments().size());
+        Assertions.assertEquals(itemBookingCommentDto.getComments().get(0).getId(), actual.getComments().get(0).getId());
+        Assertions.assertEquals(
+                itemBookingCommentDto.getComments().get(0).getText(), actual.getComments().get(0).getText());
+        Assertions.assertEquals(
+                itemBookingCommentDto.getComments().get(0).getAuthorName(), actual.getComments().get(0).getAuthorName());
     }
 
     @Test
@@ -363,19 +368,26 @@ class ItemServiceImplTest {
         when(itemRepository.findById(1L)).thenReturn(Optional.ofNullable(item));
         when(commentRepository.findAllByItemId(item.getId())).thenReturn(List.of(comment));
 
-        verify(bookingRepository, never()).findFirstByItemIdAndStartBeforeOrderByEndDesc(eq(itemDto.getId()), any(LocalDateTime.class));
-        verify(bookingRepository, never()).findFirstByItemIdAndStartAfterAndStatusNotOrderByStartAsc(eq(itemDto.getId()), any(LocalDateTime.class), eq(BookingStatus.REJECTED));
+        verify(bookingRepository, never()).findFirstByItemIdAndStartBeforeOrderByEndDesc(
+                eq(itemDto.getId()), any(LocalDateTime.class));
 
-        Assertions.assertEquals(itemBookingCommentDto.getId(), itemService.findById(1L, 1L).getId());
-        Assertions.assertEquals(itemBookingCommentDto.getName(), itemService.findById(1L, 1L).getName());
-        Assertions.assertEquals(itemBookingCommentDto.getDescription(), itemService.findById(1L, 1L).getDescription());
-        Assertions.assertEquals(itemBookingCommentDto.getOwner(), itemService.findById(1L, 1L).getOwner());
-        Assertions.assertEquals(itemBookingCommentDto.getAvailable(), itemService.findById(1L, 1L).getAvailable());
+        verify(bookingRepository, never()).findFirstByItemIdAndStartAfterAndStatusNotOrderByStartAsc(
+                eq(itemDto.getId()), any(LocalDateTime.class), eq(BookingStatus.REJECTED));
 
-        Assertions.assertEquals(itemBookingCommentDto.getComments().size(), itemService.findById(1L, 1L).getComments().size());
-        Assertions.assertEquals(itemBookingCommentDto.getComments().get(0).getId(), itemService.findById(1L, 1L).getComments().get(0).getId());
-        Assertions.assertEquals(itemBookingCommentDto.getComments().get(0).getText(), itemService.findById(1L, 1L).getComments().get(0).getText());
-        Assertions.assertEquals(itemBookingCommentDto.getComments().get(0).getAuthorName(), itemService.findById(1L, 1L).getComments().get(0).getAuthorName());
+        ItemWithBookingCommentInfoDto actual = itemService.findById(1L, 1L);
+
+        Assertions.assertEquals(itemBookingCommentDto.getId(), actual.getId());
+        Assertions.assertEquals(itemBookingCommentDto.getName(), actual.getName());
+        Assertions.assertEquals(itemBookingCommentDto.getDescription(), actual.getDescription());
+        Assertions.assertEquals(itemBookingCommentDto.getOwner(), actual.getOwner());
+        Assertions.assertEquals(itemBookingCommentDto.getAvailable(), actual.getAvailable());
+
+        Assertions.assertEquals(itemBookingCommentDto.getComments().size(), actual.getComments().size());
+        Assertions.assertEquals(itemBookingCommentDto.getComments().get(0).getId(), actual.getComments().get(0).getId());
+        Assertions.assertEquals(
+                itemBookingCommentDto.getComments().get(0).getText(), actual.getComments().get(0).getText());
+        Assertions.assertEquals(
+                itemBookingCommentDto.getComments().get(0).getAuthorName(), actual.getComments().get(0).getAuthorName());
     }
 
     @Test
@@ -441,9 +453,11 @@ class ItemServiceImplTest {
                 .thenReturn(lastBooking);
         when(commentRepository.save(commentRequest)).thenReturn(commentResponse);
 
-        Assertions.assertEquals(commentDtoExpected.getId(), itemService.saveComment(commentDtoRequest,2L, 2L).getId());
-        Assertions.assertEquals(commentDtoExpected.getAuthorName(), itemService.saveComment(commentDtoRequest,2L, 2L).getAuthorName());
-        Assertions.assertEquals(commentDtoExpected.getText(), itemService.saveComment(commentDtoRequest,2L, 2L).getText());
+        CommentDto actual = itemService.saveComment(commentDtoRequest, 2L, 2L);
+
+        Assertions.assertEquals(commentDtoExpected.getId(), actual.getId());
+        Assertions.assertEquals(commentDtoExpected.getAuthorName(), actual.getAuthorName());
+        Assertions.assertEquals(commentDtoExpected.getText(), actual.getText());
 
     }
 
