@@ -128,7 +128,7 @@ class ItemRequestServiceImplTest {
 
     @Test
     void shouldAdd_whenUserNotFound_fail() {
-        when(itemRequestRepository.save(itemRequestIn)).thenThrow(new EntityNotFoundException(""));
+        when(userRepository.findById(999L)).thenThrow(new EntityNotFoundException(""));
 
         Assertions.assertThrows(EntityNotFoundException.class, () -> itemRequestService.add(itemRequestDtoIn, 999L));
     }
@@ -151,13 +151,12 @@ class ItemRequestServiceImplTest {
 
         Assertions.assertEquals(expected.getDescription(), actual.getDescription());
         Assertions.assertEquals(expected, actual);
-
-
     }
 
     @Test
     void findById_whenUserNotFound_fail() {
         when(userRepository.findById(999L)).thenThrow(new EntityNotFoundException(""));
+
         Assertions.assertThrows(EntityNotFoundException.class, () -> itemRequestService.findById(1L, 999L));
     }
 
