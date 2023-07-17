@@ -17,5 +17,5 @@ public interface UserService {
 
     public boolean isContains(long id);
 
-    public User findUser(long id);
+//    public User findUser(long id);
 }
