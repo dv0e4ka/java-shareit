@@ -27,12 +27,12 @@ class UserServiceIntegrationTest {
 
     @Test
     void create_whenEmailDuplicate() {
-        userService.add(UserMapper.toDto(user));
-
         User userIn = User.builder()
                 .name("newUser")
                 .email("name@mail.ru")
                 .build();
+
+        userService.add(UserMapper.toDto(user));
 
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> userService.add(UserMapper.toDto(userIn)));
     }
