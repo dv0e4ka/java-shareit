@@ -229,7 +229,6 @@ class BookingServiceImplTest {
         actualBookingDtoResponseList = bookingService.getUserBookingsByState(booker.getId(), "ALL", 0, 10);
 
         Assertions.assertEquals(expectedBookingDtoResponseList, actualBookingDtoResponseList);
-
     }
 
     @Test
@@ -245,7 +244,6 @@ class BookingServiceImplTest {
                 booker.getId(), "CURRENT", 0, 10);
 
         Assertions.assertEquals(expectedBookingDtoResponseList, actualBookingDtoResponseList);
-
     }
 
     @Test
@@ -260,7 +258,6 @@ class BookingServiceImplTest {
         actualBookingDtoResponseList = bookingService.getUserBookingsByState(booker.getId(), "PAST", 0, 10);
 
         Assertions.assertEquals(expectedBookingDtoResponseList, actualBookingDtoResponseList);
-
     }
 
     @Test
@@ -275,7 +272,6 @@ class BookingServiceImplTest {
         actualBookingDtoResponseList = bookingService.getUserBookingsByState(booker.getId(), "FUTURE", 0, 10);
 
         Assertions.assertEquals(expectedBookingDtoResponseList, actualBookingDtoResponseList);
-
     }
 
     @Test
@@ -283,13 +279,12 @@ class BookingServiceImplTest {
         List<BookingDtoResponse> expectedBookingDtoResponseList = List.of(bookingExpected);
 
         when(userRepository.findById(booker.getId())).thenReturn(Optional.ofNullable(booker));
-        when(bookingRepository.findByBookerIdAndStatusOrderByStartDesc(booker.getId(),BookingStatus.WAITING, PageRequest.of(0, 10)))
+        when(bookingRepository.findByBookerIdAndStatusOrderByStartDesc(booker.getId(), BookingStatus.WAITING, PageRequest.of(0, 10)))
                 .thenReturn(List.of(booking));
 
         actualBookingDtoResponseList = bookingService.getUserBookingsByState(booker.getId(), "WAITING", 0, 10);
 
         Assertions.assertEquals(expectedBookingDtoResponseList, actualBookingDtoResponseList);
-
     }
 
     @Test
@@ -303,29 +298,20 @@ class BookingServiceImplTest {
         actualBookingDtoResponseList = bookingService.getUserBookingsByState(booker.getId(), "REJECTED", 0, 10);
 
         Assertions.assertEquals(expectedBookingDtoResponseList, actualBookingDtoResponseList);
-
     }
 
     @Test
     void findByState_whenUnknownState_fail() {
-
-
         when(userRepository.findById(booker.getId())).thenReturn(Optional.ofNullable(booker));
 
-
         Assertions.assertThrows(UnknownStateException.class, () -> bookingService.getUserBookingsByState(booker.getId(), "UnknownState", 0, 10));
-
-
     }
 
     @Test
     void findByState_whenUnknownUser() {
-        List<BookingDtoResponse> expectedBookingDtoResponseList = List.of(bookingExpected);
-
         when(userRepository.findById(booker.getId())).thenThrow(new EntityNotFoundException(""));
 
         Assertions.assertThrows(EntityNotFoundException.class, () -> bookingService.getUserBookingsByState(booker.getId(), "ALL", 0, 10));
-
     }
 
     @Test
@@ -339,7 +325,6 @@ class BookingServiceImplTest {
         actualBookingDtoResponseList = bookingService.getOwnerBookingsByState(booker.getId(), "ALL", 0, 10);
 
         Assertions.assertEquals(expectedBookingDtoResponseList, actualBookingDtoResponseList);
-
     }
 
     @Test
@@ -355,7 +340,6 @@ class BookingServiceImplTest {
                 booker.getId(), "CURRENT", 0, 10);
 
         Assertions.assertEquals(expectedBookingDtoResponseList, actualBookingDtoResponseList);
-
     }
 
     @Test
@@ -370,7 +354,6 @@ class BookingServiceImplTest {
         actualBookingDtoResponseList = bookingService.getOwnerBookingsByState(booker.getId(), "PAST", 0, 10);
 
         Assertions.assertEquals(expectedBookingDtoResponseList, actualBookingDtoResponseList);
-
     }
 
     @Test
@@ -385,7 +368,6 @@ class BookingServiceImplTest {
         actualBookingDtoResponseList = bookingService.getOwnerBookingsByState(booker.getId(), "FUTURE", 0, 10);
 
         Assertions.assertEquals(expectedBookingDtoResponseList, actualBookingDtoResponseList);
-
     }
 
     @Test
@@ -393,13 +375,12 @@ class BookingServiceImplTest {
         List<BookingDtoResponse> expectedBookingDtoResponseList = List.of(bookingExpected);
 
         when(userRepository.findById(booker.getId())).thenReturn(Optional.ofNullable(booker));
-        when(bookingRepository.findByItemOwnerIdAndStatusOrderByStartDesc(booker.getId(),BookingStatus.WAITING, PageRequest.of(0, 10)))
+        when(bookingRepository.findByItemOwnerIdAndStatusOrderByStartDesc(booker.getId(), BookingStatus.WAITING, PageRequest.of(0, 10)))
                 .thenReturn(List.of(booking));
 
         actualBookingDtoResponseList = bookingService.getOwnerBookingsByState(booker.getId(), "WAITING", 0, 10);
 
         Assertions.assertEquals(expectedBookingDtoResponseList, actualBookingDtoResponseList);
-
     }
 
     @Test
@@ -413,29 +394,19 @@ class BookingServiceImplTest {
         actualBookingDtoResponseList = bookingService.getOwnerBookingsByState(booker.getId(), "REJECTED", 0, 10);
 
         Assertions.assertEquals(expectedBookingDtoResponseList, actualBookingDtoResponseList);
-
     }
 
     @Test
     void findByStateByOwner_whenUnknownState_fail() {
-
-
         when(userRepository.findById(booker.getId())).thenReturn(Optional.ofNullable(booker));
 
-
         Assertions.assertThrows(UnknownStateException.class, () -> bookingService.getOwnerBookingsByState(booker.getId(), "UnknownState", 0, 10));
-
-
     }
 
     @Test
     void findByStateByOwner_whenUnknownUser() {
-        List<BookingDtoResponse> expectedBookingDtoResponseList = List.of(bookingExpected);
-
         when(userRepository.findById(booker.getId())).thenThrow(new EntityNotFoundException(""));
 
         Assertions.assertThrows(EntityNotFoundException.class, () -> bookingService.getOwnerBookingsByState(booker.getId(), "ALL", 0, 10));
-
     }
-
 }

@@ -18,7 +18,6 @@ public class UserServiceImpl implements UserService {
     public UserDto add(UserDto userDto) {
         User userToSave = UserMapper.fromDto(userDto);
         User userAdded = userRepository.save(userToSave);
-        System.out.println(userAdded.getEmail() + " " + userAdded.getId());
         return UserMapper.toDto(userAdded);
     }
 
@@ -70,10 +69,4 @@ public class UserServiceImpl implements UserService {
     public boolean isContains(long id) {
         return userRepository.existsById(id);
     }
-
-//    @Override
-//    public User findUser(long id) {
-//        return userRepository.findById(id)
-//                .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден c id=" + id));
-//    }
 }

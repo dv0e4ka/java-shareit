@@ -1,6 +1,6 @@
 package ru.practicum.shareit.error;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.Slf4j;import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,13 +28,6 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handle(EmailDuplicatedFound e) {
-        log.error("получен статус 409 Conflict, duplicated email={}", e.getMessage(), e);
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handle(Exception e) {
         log.error("вылетело необработанное исключение {}", e.getMessage(), e);
@@ -44,7 +37,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handle(MethodArgumentNotValidException e) {
-        log.error("Получен статус 400 Bad request {}", e.getMessage(), e);
+        log.error("Получен статус xaxa 400 Bad request {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
     }
 
@@ -60,5 +53,12 @@ public class ErrorHandler {
     public ErrorResponse handle(OwnerShipConflictException e) {
         log.error("получен статус 404 Not found {}", e.getMessage(), e);
         return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handle(DataIntegrityViolationException e) {
+        log.error("получен статус 409 Not found {}", e.getMessage(), e);
+        return new ErrorResponse(e.getMessage() + "  идет исключение уникальности ключа в бд");
     }
 }

@@ -17,7 +17,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceImplTest {
+class UserServiceTest {
 
     @InjectMocks
     UserServiceImpl userService;
@@ -65,10 +65,10 @@ class UserServiceImplTest {
 
     @Test
     void shouldPatch() {
-        UserDto userDtoToPatch = UserDto.builder().id(999L).name("new name").email("newName@mail.ru").build();
+        UserDto userDtoToPatch = UserDto.builder().name("new name").email("newName@mail.ru").build();
         UserDto userDtoExpected = UserDto.builder().id(1L).name("new name").email("newName@mail.ru").build();
-        User userPatched = User.builder().id(1L).name("new name").email("newName@mail.ru").build();
         User userToPatch = User.builder().id(1L).name("new name").email("newName@mail.ru").build();
+        User userPatched = User.builder().id(1L).name("new name").email("newName@mail.ru").build();
 
         when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(userOut));
         when(userRepository.save(userToPatch)).thenReturn(userPatched);
@@ -77,9 +77,21 @@ class UserServiceImplTest {
     }
 
     @Test
+    void shouldPatch_whenNameAndEmailIsBlack() {
+        userIn.setId(1L);
+        UserDto userDtoToPatch = UserDto.builder().name(" ").email(" ").build();
+
+        when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(userOut));
+        when(userRepository.save(userIn)).thenReturn(userOut);
+
+        UserDto actual = userService.patch(1L, userDtoToPatch);
+        Assertions.assertEquals(userDtoOut, actual);
+    }
+
+    @Test
     void shouldPatch_whenUserNotFound_fail() {
 
-        when(userRepository.findById(1L)).thenThrow(new EntityNotFoundException(""));
+        when(userRepository.findById(1L)).thenThrow(new EntityNotFoundException("Пользователь не найден c id="));
 
         Assertions.assertThrows(EntityNotFoundException.class, () -> userService.patch(1L, userDtoOut));
     }
@@ -93,7 +105,7 @@ class UserServiceImplTest {
 
     @Test
     void findById_whenNotFound_fail() {
-        when(userRepository.findById(1L)).thenThrow(new EntityNotFoundException(""));
+        when(userRepository.findById(1L)).thenThrow(new EntityNotFoundException("Пользователь не найден c id=" + 1L));
 
         Assertions.assertThrows(EntityNotFoundException.class, () -> userService.findById(1L));
     }

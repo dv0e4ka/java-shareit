@@ -180,20 +180,17 @@ public class BookingServiceImpl implements BookingService {
         return bookings.stream().map(BookingMapper::toBookingDtoResponse).collect(Collectors.toList());
     }
 
-    @Override
-    public Booking findBookingByIdIfExist(long id) {
+    private Booking findBookingByIdIfExist(long id) {
         return bookingRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format("бронь по id %d не найдена", id)));
     }
 
-    @Override
-    public User findUserByIdIfExist(long id) {
+    private User findUserByIdIfExist(long id) {
         return userRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format("пользователь с id %d не найден", id)));
     }
 
-    @Override
-    public Item findItemByIdIfExist(long id) {
+    private Item findItemByIdIfExist(long id) {
         return itemRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(String.format("предмет с id %d не найден", id)));
     }
