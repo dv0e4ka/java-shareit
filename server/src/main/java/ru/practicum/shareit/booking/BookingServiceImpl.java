@@ -5,7 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.enums.BookingStatus;
-import ru.practicum.shareit.booking.enums.State;
+import ru.practicum.shareit.booking.enums.BookingState;
 import ru.practicum.shareit.booking.dto.BookingDtoRequest;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
 import ru.practicum.shareit.error.model.EntityNotFoundException;
@@ -108,8 +108,8 @@ public class BookingServiceImpl implements BookingService {
         List<Booking> bookings = new ArrayList<>();
         PageRequest page = PageRequest.of(from / size, size);
         try {
-            State state = State.valueOf(stateValue);
-            switch (state) {
+            BookingState bookingState = BookingState.valueOf(stateValue);
+            switch (bookingState) {
                 case ALL:
                     bookings = bookingRepository.findByBookerIdOrderByStartDesc(userId, page);
                     break;
@@ -147,8 +147,8 @@ public class BookingServiceImpl implements BookingService {
         List<Booking> bookings = new ArrayList<>();
         PageRequest page = PageRequest.of(from / size, size);
         try {
-            State state = State.valueOf(stateValue);
-            switch (state) {
+            BookingState bookingState = BookingState.valueOf(stateValue);
+            switch (bookingState) {
                 case ALL:
                     bookings = bookingRepository.findByItemOwnerIdOrderByStartDesc(ownerId, page);
                     break;
