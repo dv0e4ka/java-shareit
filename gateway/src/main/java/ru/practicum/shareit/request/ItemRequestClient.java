@@ -23,7 +23,7 @@ public class ItemRequestClient extends BaseClient {
     }
 
     public ResponseEntity<Object> save(long userId, ItemRequestDto itemRequestDto) {
-        return post("", itemRequestDto);
+        return post("", userId, itemRequestDto);
     }
 
     public ResponseEntity<Object> getById(long userId, long requestId) {

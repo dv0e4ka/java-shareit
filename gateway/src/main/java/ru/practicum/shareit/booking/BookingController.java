@@ -53,7 +53,7 @@ public class BookingController {
     public ResponseEntity<Object> getUserBookingsByState(@Min(0) @RequestParam (defaultValue = "0") int from,
                                                            @Positive @RequestParam (defaultValue = "10") int size,
                                                            @RequestHeader(Header.X_SHARED_USER_ID) long userId,
-                                                           @RequestParam(defaultValue = "ALL") String stateParam) {
+                                                           @RequestParam(name = "state", defaultValue = "ALL") String stateParam) {
         BookingState state = BookingState.from(stateParam)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
         log.info("поступил запрос на получение списка всех бронирований текущего пользователя id={}", userId);
@@ -68,7 +68,7 @@ public class BookingController {
     public ResponseEntity<Object> getBookingsByOwnerByState(@Min(0) @RequestParam (defaultValue = "0") int from,
                                                               @Positive @RequestParam (defaultValue = "10") int size,
                                                               @RequestHeader(Header.X_SHARED_USER_ID) long ownerId,
-                                                              @RequestParam(defaultValue = "ALL") String stateParam) {
+                                                              @RequestParam(name = "state", defaultValue = "ALL") String stateParam) {
 
         log.info("поступил запрос на получение списка бронирований всех вещей владельца id={}", ownerId);
         BookingState state = BookingState.from(stateParam)

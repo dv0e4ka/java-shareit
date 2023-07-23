@@ -20,7 +20,7 @@ public class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> add(@RequestHeader(Header.X_SHARED_USER_ID) long ownerId, @Valid @RequestBody ItemDto itemDto) {
+    public ResponseEntity<Object> add(@RequestHeader(Header.X_SHARED_USER_ID) Long ownerId, @Valid @RequestBody ItemDto itemDto) {
         log.info("получен запрос на добавление предмета {} владельца={}", itemDto.getName(), ownerId);
         return itemClient.add(ownerId, itemDto);
     }

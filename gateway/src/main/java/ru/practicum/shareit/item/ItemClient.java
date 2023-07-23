@@ -29,14 +29,14 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> add(long ownerId, ItemDto itemDto) {
-        return post("", itemDto);
+        return post("", ownerId, itemDto);
     }
 
     public ResponseEntity<Object> patch(long id, long ownerId, ItemDto itemDto) {
         return patch("/" + id, ownerId, itemDto);
     }
 
-    public ResponseEntity<Object> findById(long userId, long itemId) {
+    public ResponseEntity<Object> findById(long itemId, long userId) {
         return get("/" + itemId, userId);
     }
 
