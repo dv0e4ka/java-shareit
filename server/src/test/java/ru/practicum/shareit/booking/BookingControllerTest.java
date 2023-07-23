@@ -82,40 +82,6 @@ class BookingControllerTest {
     }
 
     @Test
-    void shouldNotSave_WhenStartNotValid() throws Exception {
-        BookingDtoRequest bookingDtoRequestNoDate = BookingDtoRequest.builder().build();
-
-        bookingDtoRequest.setStart(null);
-        when(bookingService.add(1L, bookingDtoRequestNoDate))
-                .thenReturn(bookingDtoResponse);
-
-        mvc.perform(post(URL)
-                        .content(mapper.writeValueAsString(bookingDtoRequest))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(Header.X_SHARED_USER_ID, 1L))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void shouldNotSave_WhenEndNotValid() throws Exception {
-        BookingDtoRequest bookingDtoRequestNoDate = BookingDtoRequest.builder().build();
-
-        bookingDtoRequest.setEnd(null);
-        when(bookingService.add(1L, bookingDtoRequestNoDate))
-                .thenReturn(bookingDtoResponse);
-
-        mvc.perform(post(URL)
-                        .content(mapper.writeValueAsString(bookingDtoRequest))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(Header.X_SHARED_USER_ID, 1L))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     void shouldPatch() throws Exception {
         bookingDtoResponse.setStatus(BookingStatus.APPROVED);
         when(bookingService.patch(1L, 1L, true))

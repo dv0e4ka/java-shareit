@@ -9,7 +9,6 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemWithBookingCommentInfoDto;
 import ru.practicum.shareit.util.Header;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,7 +20,7 @@ public class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDto add(@RequestHeader(Header.X_SHARED_USER_ID) long ownerId, @Valid @RequestBody ItemDto itemDto) {
+    public ItemDto add(@RequestHeader(Header.X_SHARED_USER_ID) long ownerId, @RequestBody ItemDto itemDto) {
         log.info("получен запрос на добавление предмета {} владельца={}", itemDto.getName(), ownerId);
         itemDto.setOwner(ownerId);
         return itemService.add(itemDto);
@@ -60,7 +59,7 @@ public class ItemController {
     @PostMapping("/{itemId}/comment")
     public CommentDto addComment(@PathVariable long itemId,
                                  @RequestHeader(Header.X_SHARED_USER_ID) long userId,
-                                 @Valid @RequestBody  CommentDto commentDto) {
+                                 @RequestBody  CommentDto commentDto) {
         log.info("поступил запрос на добавление коммента на предмет id={}, от пользователя id={}", itemId, userId);
         return itemService.saveComment(commentDto, userId, itemId);
     }

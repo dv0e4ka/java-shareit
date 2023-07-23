@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -16,7 +17,7 @@ public class UserController {
     private final UserClient userClient;
 
     @PostMapping
-    public ResponseEntity<Object> add(@RequestBody UserDto user) {
+    public ResponseEntity<Object> add(@Valid @RequestBody UserDto user) {
         log.info("получен запрос на добавление пользователя с именем={}, и email={}", user.getName(), user.getEmail());
         return userClient.add(user);
     }

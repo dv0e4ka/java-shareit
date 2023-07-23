@@ -64,28 +64,6 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldSave_whenNameIsEmpty_fail() throws Exception {
-        userDtoIn.setName("");
-        mvc.perform(post(URL)
-                        .content(mapper.writeValueAsString(userDtoIn))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void shouldSave_whenEmailNotValid_fail() throws Exception {
-        userDtoIn.setEmail("");
-        mvc.perform(post(URL)
-                        .content(mapper.writeValueAsString(userDtoIn))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     void shouldUpdate() throws Exception {
         when(userService.patch(1L, userDtoIn)).thenReturn(userDtoOut);
 

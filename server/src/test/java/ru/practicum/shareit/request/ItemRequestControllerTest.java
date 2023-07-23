@@ -70,19 +70,6 @@ class ItemRequestControllerTest {
     }
 
     @Test
-    void shouldSave_whenNotDescription_fail() throws Exception {
-        itemRequestDtoIn.setDescription("");
-
-        mvc.perform(post(URL)
-                        .content(mapper.writeValueAsString(itemRequestDtoIn))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(Header.X_SHARED_USER_ID, 1L))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     void getById() throws Exception {
         when(itemRequestService.findById(1L, 1L)).thenReturn(itemRequestDtoOut);
 
@@ -116,25 +103,5 @@ class ItemRequestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(itemRequestDtoOutList)));
-    }
-
-    @Test
-    void getAll_whenFromIsNegative_fail() throws Exception {
-        mvc.perform(get(URL + "/all")
-                        .param("from", "-1")
-                        .param("size", "10")
-                        .header(Header.X_SHARED_USER_ID, 1L))
-                .andDo(print())
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    void getAll_whenSizeIsNegative_fail() throws Exception {
-        mvc.perform(get(URL + "/all")
-                        .param("from", "0")
-                        .param("size", "-1")
-                        .header(Header.X_SHARED_USER_ID, 1L))
-                .andDo(print())
-                .andExpect(status().isInternalServerError());
     }
 }

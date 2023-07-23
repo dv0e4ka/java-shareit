@@ -96,45 +96,6 @@ class ItemControllerTest {
     }
 
     @Test
-    void shouldNotSave_whenNameIsEmpty() throws Exception {
-        itemDto.setName("");
-
-        mvc.perform(post(URL)
-                        .content(mapper.writeValueAsString(itemDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(Header.X_SHARED_USER_ID, 1))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void shouldNotSave_whenDescriptionIsEmpty() throws Exception {
-        itemDto.setDescription("");
-
-        mvc.perform(post(URL)
-                        .content(mapper.writeValueAsString(itemDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(Header.X_SHARED_USER_ID, 1))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void shouldNotSave_whenAvailableIsNull() throws Exception {
-        itemDto.setAvailable(null);
-
-        mvc.perform(post(URL)
-                        .content(mapper.writeValueAsString(itemDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header(Header.X_SHARED_USER_ID, 1))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     void shouldPatch() throws Exception {
         itemDtoToService.setOwner(1L);
         itemDtoToService.setId(1L);
