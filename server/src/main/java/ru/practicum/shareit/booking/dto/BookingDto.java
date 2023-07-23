@@ -6,9 +6,6 @@ import ru.practicum.shareit.booking.enums.BookingStatus;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.UserDto;
 
-import javax.validation.constraints.Future;
-import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -18,14 +15,7 @@ public class BookingDto {
     private BookingStatus status;
     private ItemDto itemDto;
     private UserDto userDto;
-    @NotNull
-    @FutureOrPresent
     private LocalDateTime start;
-
-    @NotNull
-    @Future
     private LocalDateTime end;
-
-    @NotNull
     private long itemId;
 }
