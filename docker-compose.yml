@@ -22,9 +22,11 @@ services:
     depends_on:
       - db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
+      - URL_DB=jdbc:postgresql://db:5432/shareit
+      - POSTGRES_DB=shareit
       - POSTGRES_USER=michael
       - POSTGRES_PASSWORD=password
+      - ENV TZ=Europe/Moscow
 
   db:
     image: postgres:13.7-alpine
