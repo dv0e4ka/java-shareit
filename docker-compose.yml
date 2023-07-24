@@ -26,7 +26,6 @@ services:
       - POSTGRES_DB=shareit
       - POSTGRES_USER=michael
       - POSTGRES_PASSWORD=password
-      - ENV TZ=Europe/Moscow
 
   db:
     image: postgres:13.7-alpine
