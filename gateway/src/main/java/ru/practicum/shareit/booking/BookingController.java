@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.utils.Header;
-import ru.practicum.shareit.utils.BadRequestException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -55,11 +54,7 @@ public class BookingController {
         BookingState state = BookingState.from(stateParam)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
         log.info("поступил запрос на получение списка всех бронирований текущего пользователя id={}", userId);
-        try {
             return bookingClient.getUserBookingsByState(userId, state, from, size);
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException(String.format("неизвестный state: %s", state));
-        }
     }
 
     @GetMapping("/owner")
@@ -71,10 +66,6 @@ public class BookingController {
         log.info("поступил запрос на получение списка бронирований всех вещей владельца id={}", ownerId);
         BookingState state = BookingState.from(stateParam)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
-        try {
         return bookingClient.getBookingsByOwnerByState(ownerId, state, from, size);
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException(String.format("неизвестный state: %s", state));
-        }
     }
 }

@@ -51,6 +51,7 @@ public class ItemController {
     @GetMapping("/search")
     public ResponseEntity<Object> findByParam(@RequestParam String text) {
         log.info("поступил запрос на поиск доступной вещи по параметру={}", text);
+
         return itemClient.findByParam(text);
     }
 
